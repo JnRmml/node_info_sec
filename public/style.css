@@ -1,22 +1,28 @@
-body {
-  margin: 20px;
+#userstories {
+  margin-left: 5%;
+  margin-top: 5%;
 }
 
-code {
-  background: #d0d0d5;
+.p-50 {
+  margin: 50px;
 }
 
-canvas {
-  margin: auto;
+#testui {
+  margin-left: 5%;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
+.text-align-left {
+  text-align: left;
 }
 
-@media (min-width: 800px) {
-  .container {
-    flex-direction: row;
-  }
+input[type='text'] {
+  width: 100px;
+}
+
+.m-50 {
+  margin: 50px;
+}
+
+.mt-200 {
+  margin-top: 200px;
 }

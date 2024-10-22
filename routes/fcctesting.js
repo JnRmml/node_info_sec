@@ -27,9 +27,9 @@
 
 'use strict';
 
-const cors = require('cors');
-const fs = require('fs');
-const runner = require('../test-runner');
+var cors = require('cors');
+var fs = require('fs');
+var runner = require('../test-runner');
 
 module.exports = function (app) {
 
@@ -58,28 +58,9 @@ module.exports = function (app) {
       });
     });
 
-  app.route('/_api/public/Collectible.mjs')
-    .get(function (req, res, next) {
-      console.log('requested');
-      fs.readFile(__dirname + '/public/Collectible.mjs', function (err, data) {
-        if (err) return next(err);
-        res.type('txt').send(data.toString());
-      });
-    });
-
-  app.route('/_api/public/Player.mjs')
-    .get(function (req, res, next) {
-      console.log('requested');
-      fs.readFile(__dirname + '/public/Player.mjs', function (err, data) {
-        if (err) return next(err);
-        res.type('txt').send(data.toString());
-      });
-    });
-
-  var error;
   app.get('/_api/get-tests', cors(), function(req, res, next){
-    console.log(error);
-    if(!error && process.env.NODE_ENV === 'test') return next();
+    console.log('requested');
+    if(process.env.NODE_ENV === 'test') return next();
     res.json({status: 'unavailable'});
   },
   function(req, res, next){

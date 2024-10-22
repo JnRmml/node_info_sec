@@ -1,60 +1,142 @@
 /*
-*       
-*       To run the tests on Repl.it, set `NODE_ENV` to `test` 
-*       without quotes in the `.env` file. 
-*       To run the tests in the console, open the terminal 
-*       with [Ctrl + `] (backtick) and run the command `npm run test`.
-*
+var chaiHttp = require("chai-http");
+var chai = require("chai");
+var assert = chai.assert;
+var server = require("../server");
 */
-
+//(async () => {
+/*  const chai = await import('chai');
+  const chaiHttp = await import('chai-http');
+  const assert = chai.assert;
+  const server = (await import('../server.js')).default;
+*/
 const chai = require('chai');
-const assert = chai.assert;
 const chaiHttp = require('chai-http');
-const server = require('../server');
+const assert = chai.assert;
+const server = require('../server.js');
 
 chai.use(chaiHttp);
 
-suite('Functional Tests', () => {
 
-  suite('Headers test', () => {
-    test("Prevent the client from trying to guess / sniff the MIME type.", done => {
-      chai.request(server)
-        .get('/')
-        .end((err, res) => {
-          assert.deepStrictEqual(res.header['x-content-type-options'], 'nosniff');
+suite("Functional Tests", function() {
+
+  suite("GET /api/stock-prices => stockData object", function() {
+    //this.timeout(5000);
+    //wait for 4 sec after every test
+    let numOflike;
+    //this.afterEach(function(done) {
+    //  setTimeout(() => {
+    //    done();
+    //  }, 4000);
+    //});
+/**/
+
+    before("b4 1 stock", function(done) {
+      chai
+        .request(server)
+        .get("/api/stock-prices")
+        .query({ stock: "goog", like: true })
+        .end(function(err, res) {
+          //complete this one too
+          assert.equal(res.status, 200, err);
+          assert.isObject(res.body.stockData, "Body should be object");
+          assert.property(res.body.stockData, "stock");
+          assert.property(res.body.stockData, "price");
+          assert.property(res.body.stockData, "likes");
+          assert.equal(res.body.stockData.stock, "GOOG");
+          numOflike = res.body.stockData.likes;
           done();
         });
     });
-
-    test("Prevent cross-site scripting (XSS) attacks.", done => {
-      chai.request(server)
-        .get('/')
-        .end((err, res) => {
-          assert.deepStrictEqual(res.header['x-xss-protection'], '1; mode=block');
+	// Test 1
+    test("Test 1: 1 stock", function(done) {
+		console.log("Starting test: 1 stock");
+      chai
+        .request(server)
+        .get("/api/stock-prices")
+        .query({ stock: "goog" })
+        .end(function(err, res) {
+          //complete this one too
+          assert.equal(res.status, 200);
+          assert.isObject(res.body.stockData, "Body should be object");
+          assert.property(res.body.stockData, "stock");
+          assert.property(res.body.stockData, "price");
+          assert.property(res.body.stockData, "likes");
+          assert.equal(res.body.stockData.stock, "GOOG");
+          //numOflike = res.body.stockData.likes;
           done();
         });
     });
-
-    test("Nothing from the website is cached in the client.", done => {
-      chai.request(server)
-        .get('/')
+	// Test 2
+    test("Test 2: 1 stock with like", function(done) {
+        console.log("Starting test 2: 1 stock with like");
+	  chai
+        .request(server)
+        .get("/api/stock-prices")
+        .query({ stock: "goog", like: true })
         .end((err, res) => {
-          assert.deepStrictEqual(res.header['surrogate-control'], 'no-store');
-          assert.deepStrictEqual(res.header['cache-control'], 'no-store, no-cache, must-revalidate, proxy-revalidate');
-          assert.deepStrictEqual(res.header['pragma'], 'no-cache');
-          assert.deepStrictEqual(res.header['expires'], '0');
+          assert.equal(res.status, 200);
+          assert.equal(res.body.stockData.stock, "GOOG");
+          assert.isNumber(res.body.stockData.price, "price");
+          assert.equal(res.body.stockData.likes, numOflike);
           done();
         });
     });
-
-    test("The headers say that the site is powered by 'PHP 7.4.3'.", done => {
-      chai.request(server)
-        .get('/')
+    // Test 3
+    test("Test 3: 1 stock with like again (ensure likes arent double counted)", function(done) {
+        console.log("Starting test 3: 1 stock with like again (ensure likes arent double counted)");
+	  chai
+        .request(server)
+        .get("/api/stock-prices")
+        .query({ stock: "goog", like: true })
         .end((err, res) => {
-          assert.deepStrictEqual(res.header['x-powered-by'], 'PHP 7.4.3');
+          assert.equal(res.status, 200);
+          assert.equal(res.body.stockData.likes, numOflike);
+          assert.equal(res.body.stockData.stock, "GOOG");
           done();
         });
     });
+    // Test 4
+    test("Test 4: 2 stocks", function(done) {
+        console.log("Starting test 4: 2 stocks");
+	  chai
+        .request(server)
+        .get("/api/stock-prices")
+        .query({ stock: ["goog", "msft"] })
+        .end((err, res) => {
+          assert.equal(res.status, 200);
+          assert.equal(res.body.stockData[0].stock, "GOOG");
+          assert.equal(res.body.stockData[1].stock, "MSFT");
+          assert.isNumber(res.body.stockData[0].rel_likes, "should be number");
+          assert.isNumber(res.body.stockData[1].rel_likes, "should be number");
+          numOflike = [
+            res.body.stockData[0].rel_likes,
+            res.body.stockData[1].rel_likes
+          ];
+          done();
+        });
+    });
+    
+	// Test 5
+    test("Test 5: 2 stocks with like", function(done) {
+        console.log("Starting test 5: 2 stock with like");
+	  chai
+        .request(server)
+        .get("/api/stock-prices")
+        .query({ stock: ["goog", "msft"], like: "true" })
+        .end((err, res) => {
+          assert.equal(res.status, 200);
+          assert.equal(res.body.stockData[0].stock, "GOOG");
+          assert.equal(res.body.stockData[1].stock, "MSFT");
+          assert.isNumber(res.body.stockData[0].rel_likes, "should be number");
+          assert.isNumber(res.body.stockData[1].rel_likes, "should be number");
+          assert.equal(res.body.stockData[0].rel_likes, numOflike[0] );
+          assert.equal(res.body.stockData[1].rel_likes, numOflike[1] );
+        
+          done();
+        });
+    });
+    /**/
   });
-
 });
+//});
