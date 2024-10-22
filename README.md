@@ -1,4 +1,4 @@
-# Secure Real Time Multiplayer Game
+# FCC Information security projects: stock-price-checker
 
 
 One solution to FCC information security Challenge about a Stockchecker.
