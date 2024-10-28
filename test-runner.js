@@ -31,7 +31,6 @@ var EventEmitter = require('events').EventEmitter;
 var Mocha = require('mocha'),
     fs = require('fs'),
     path = require('path');
-    require("@babel/register");
 
 var mocha = new Mocha();
 var testDir = './tests'

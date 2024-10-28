@@ -1,22 +1,36 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
 body {
-  margin: 20px;
+  padding: 10px;
 }
 
-code {
-  background: #d0d0d5;
+.replies {
+  margin-left: 50px;
 }
 
-canvas {
-  margin: auto;
+.reply {
+  border: 1px dotted black;
+  margin: 5px;
+  padding: 5px;
 }
 
-.container {
-  display: flex;
-  flex-direction: column;
+.newReply {
+  margin: 10px 5px 10px 5px;
 }
 
-@media (min-width: 800px) {
-  .container {
-    flex-direction: row;
-  }
+.thread {
+  border: 2px solid black;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.id {
+  font-size: 10.5px;
+}
+
+#submitNewThread {
+  margin: 50px;
 }

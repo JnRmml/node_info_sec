@@ -1,7 +1,7 @@
-# Secure Real Time Multiplayer Game
+# Anonymous Message Board
 
+This is one solution for the Anonymous Message Board project. Instructions for completing the project yourself can be found at https://www.freecodecamp.org/learn/information-security/information-security-projects/anonymous-message-board
 
-One solution to FCC information security Challenge about a multiplayer game.
+What could be better: Test cases are not overloaded, can be more precise
 
-Needs a bit more work though. 
-Build form the boilerplate for the Secure Real Time Multiplayer Game project. Instructions for building the project can be found at https://www.freecodecamp.org/learn/information-security/information-security-projects/secure-real-time-multiplayer-game
+MongoDB URI will be removed. Set up your own connection in sample.env.

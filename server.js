@@ -1,76 +1,83 @@
+'use strict';
 require('dotenv').config();
-const express = require('express');
-const bodyParser = require('body-parser');
-const expect = require('chai');
-const socket = require('socket.io');
-const cors = require('cors');
-const helmet = require('helmet');
-//const request = require('request')
+const express     = require('express');
+const bodyParser  = require('body-parser');
+const cors        = require('cors');
+const helmet        = require('helmet');
 
-const fccTestingRoutes = require('./routes/fcctesting.js');
-const runner = require('./test-runner.js');
+const apiRoutes         = require('./routes/api.js');
+const fccTestingRoutes  = require('./routes/fcctesting.js');
+const runner            = require('./test-runner');
 
 const app = express();
 
-
 app.use('/public', express.static(process.cwd() + '/public'));
-app.use('/assets', express.static(process.cwd() + '/assets'));
 
-app.use(helmet.noSniff());
-app.use(helmet.xssFilter());
-app.use(helmet.noCache());
-//app.use((req, res) => res.setHeader('X-Powered-By', 'PHP 7.4.3'));
-//app.use(helmet.hidePoweredBy());
+app.use(cors({origin: '*'})); //For FCC testing purposes only
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use((req, res, next) => {
-  res.setHeader('X-Powered-By', 'PHP 7.4.3');
-  next();
-});
 
+app.use(helmet({
+	referrerPolicy: {
+      policy: ["same-origin"],
+    },
+    xFrameOptions: { action: "sameorigin" },
+    frameguard: {         // configure
+       action: "sameorigin"
+    },
+    contentSecurityPolicy: {    // enable and configure
+        directives: {
+        "script-src": ["'self'", "https://code.jquery.com", "'unsafe-inline'"],
+        "style-src": ["'self'", "'unsafe-inline'"]
+        }
+  },/**/
+  dnsPrefetchControl: true     // disable
+}));
 
-//For FCC testing purposes and enables user to connect from outside the hosting platform
-app.use(cors({origin: '*'})); 
-
-//app.get("/", (req, res) => {
-//	res.setHeader('X-Powered-By', 'PHP 7.4.3');   
-//});
-
-// Index page (static HTML)
-app.route('/')
-  //.use((req, res) => res.setHeader('X-Powered-By', 'PHP 7.4.3'))
+//Sample front-end
+app.route('/b/:board/')
   .get(function (req, res) {
-    res.setHeader('X-Powered-By', 'PHP 7.4.3')
+    res.sendFile(process.cwd() + '/views/board.html');
+  });
+app.route('/b/:board/:threadid')
+  .get(function (req, res) {
+    res.sendFile(process.cwd() + '/views/thread.html');
+  });
+
+//Index page (static HTML)
+app.route('/')
+  .get(function (req, res) {
     res.sendFile(process.cwd() + '/views/index.html');
-  }); 
+  });
 
 //For FCC testing purposes
 fccTestingRoutes(app);
-    
-// 404 Not Found Middleware
+
+//Routing for API 
+apiRoutes(app);
+
+//404 Not Found Middleware
 app.use(function(req, res, next) {
   res.status(404)
-	.setHeader('X-Powered-By', 'PHP 7.4.3')
     .type('text')
     .send('Not Found');
 });
 
-const portNum = process.env.PORT || 3000;
-
-// Set up server and tests
-const server = app.listen(portNum, () => {
-  console.log(`Listening on port ${portNum}`);
-  if (process.env.NODE_ENV==='test') {
+//Start our server and tests!
+const listener = app.listen(process.env.PORT || 3000, function () {
+  console.log('Your app is listening on port ' + listener.address().port);
+  if(process.env.NODE_ENV==='test') {
     console.log('Running Tests...');
     setTimeout(function () {
       try {
         runner.run();
-      } catch (error) {
+      } catch(e) {
         console.log('Tests are not valid:');
-        console.error(error);
+        console.error(e);
       }
     }, 1500);
   }
 });
 
-module.exports = app; // For testing
+module.exports = app; //for testing
