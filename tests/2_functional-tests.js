@@ -85,7 +85,7 @@ this.timeout(10000); // Timeout auf 10 Sekunden erhöhen
         .get('/api/threads/tests')
         .end(function (err, res) { 
 		  for(let j = 0; j < res.body.length; j++){
-			  ids.push(res.body[j]._id);
+			  //ids.push(res.body[j]._id);
 			  //console.log("ewgtwegowergoerkgoerkgüoerkgperkgüperkpgüerkgpüerkgpüerg",res.body[j].delete_password);
 			  //pw_ids.push(res.body[j].delete_password);
 		  }
@@ -118,8 +118,8 @@ this.timeout(10000); // Timeout auf 10 Sekunden erhöhen
         .delete('/api/threads/tests')
 		.send({
 			"thread_id": ids[0],
-			"mark": "ich teste hier nur durch, ignorier mich" + pw_ids[0],
-			"delete_password": pw_ids[0]
+			"mark": "ich teste hier nur durch" + pw_ids[0],
+			"delete_password": "Musterpw" //erster POST Eintrag ist ohne index
 			})
         .end(function (err, res) {
           assert.equal(res.status, 200);
