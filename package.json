@@ -4,13 +4,15 @@
   "description": "Information Security 5: Secure Real-Time Multiplayer Game",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "test": "PORT=3005 mocha --require @babel/register --recursive --exit --ui tdd tests/"
   },
   "dependencies": {
     "@babel/core": "^7.7.5",
     "@babel/preset-env": "^7.7.6",
     "@babel/register": "^7.7.4",
+	"axios": "^1.7.7",
+	"bcrypt": "^5.1.1",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
@@ -20,8 +22,11 @@
     "helmet": "^3.21.3",
     "jsdom": "^16.2.0",
     "mocha": "^10.7.3",
-    "socket.io": "^4.7.5",
-    "socket.io-client": "^2.3.0"
+    "socket.io": "^4.8.0",
+    "socket.io-client": "^2.3.0",
+	"nodemon": "^2.0.4",
+	"uuid": "^10.0.0",
+    "zombie": "^6.1.4"
   },
   "license": "MIT"
 }

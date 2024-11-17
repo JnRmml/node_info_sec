@@ -18,15 +18,40 @@
       <h1>Secure Real Time Multiplayer Game</h1>
     </header>
     <hr style="margin: 25px" />
+	<div id="player_display" style="text-align: center;"></div>
+	  <!--Koordinaten-->
+	  <!--<p style="min-widt: 25px;">
+	  <span id="xkoord" style="position: relative;"> X: </span>
+	  <span id="ykoord" style="position: relative;"> Y:  </span>
+	  </p>-->
     <div class="container">
       <canvas 
         ref="game"
         id="game-window" 
         width="640" 
-        height="480"
+        height="480" 
       >
       </canvas>
     </div>
+	<h1>Scoreboard</h1>
+	<div id="scoreboard"></div>
   </body>
-  <script src="../public/game.mjs" type="module"></script>
+  <script src="./public/game.mjs" type="module"></script>
+  <script>
+  function koord (e) {
+    //alert("event"+ e);
+    const canvas = document.getElementById("game-window");
+    const offset = canvas.getBoundingClientRect();
+	let x = Math.floor(e.clientX - offset.left);
+	let y = Math.floor(e.clientY - offset.top);
+	document.getElementById("xkoord").innerHTML = "X: "+x + " -- " ;
+	document.getElementById("ykoord").innerHTML = " Y: "+y;
+  }
+   const canvas = document.getElementById("game-window");
+  canvas.addEventListener("mousemove", koord);
+  
+  
+
+
+  </script>
 </html>
