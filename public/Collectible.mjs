@@ -1,5 +1,6 @@
 class Collectible {
-  constructor({ x = 10, y = 10, q = 15 }) {
+  constructor({ x = 10, y = 10, q = 15, id = Math.floor(Math.random()*1000)}) {
+    this.id = id;
     this.x = x;
     this.y = y;
     this.q = q;

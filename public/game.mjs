@@ -79,7 +79,7 @@ socket.on('players update', (updatedPlayers) => {
         } else {
             // Aktualisiere die Position und andere Daten des Spielers
             Object.assign(players[id], updatedPlayers[id]);
-            board_content += "<p style='color: "+players[id].id.colour+";'>Spieler "+players[id].id +"- Punkte "+players[id].score +"</p>";
+            board_content += "<p style='color: "+players[id].id.colour+";'>Spieler "+players[id].id +"- Punkte "+players[id].score +" - "+ players[id].calculateRank(Object.values(players)) +"</p>";
 		}
     });
     

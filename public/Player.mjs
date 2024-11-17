@@ -116,6 +116,23 @@ draw() {
 	 return;
   }
   
+  movePlayer(str,num){
+	//console.log("str",str);
+	//console.log("num",num);
+	if(str == 'left'){
+	   this.x -= num;
+	}
+	if(str == 'right'){
+	   this.x += num;
+	}
+	if(str == 'up'){
+	   this.y += num;
+	}
+	if(str == 'down'){
+	   this.y -= num;
+	}
+  }
+  
   move(timestamp, lastTimestamp, xMax, yMax) {
        //console.log(this.x, this.y);
 	   let delta_x = (timestamp - lastTimestamp ) * this.speedX;
@@ -142,7 +159,27 @@ draw() {
 	   
 	}
   
-  
+calculateRank(playerArray) {
+    // Stelle sicher, dass das Argument ein Array ist
+    if (!Array.isArray(playerArray)) {
+        throw new TypeError('Expected an array of players');
+    }
+
+    // Sortiere nach Score in absteigender Reihenfolge
+    playerArray = playerArray.sort((a, b) => b.score - a.score);
+
+    // Finde den Rang des aktuellen Spielers
+    let len = playerArray.length;
+    for (let i = 0; i < len; i++) {
+        if (playerArray[i].id === this.id) {
+            return "Rank: " + (i + 1) + "/" + len;
+        }
+    }
+
+    // Fallback, falls Spieler nicht gefunden wird
+    return "Rank: N/A";
+}
+
   
 onKeydown = (event) => {
 //alert(event.code);
